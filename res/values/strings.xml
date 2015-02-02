@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RSA Mobile</string>
+    <string name="title_section1">Key</string>
+    <string name="title_section2">Crypt operations</string>
+    <string name="action_settings">Settings</string>
+    <string name="KeyWasGenerated">Key generated and saved!</string>
+    <string name="WrongKeyArguments">Wrong key arguments!</string>
+    <string name="Processed">Processed!</string>
+    
+    <string name="Encrypted">Encrypted!</string>
+    <string name="Decrypted">Decrypted!</string>
+    <string name="KeyNotGenerated">Key was not generated!</string>
+</resources>
