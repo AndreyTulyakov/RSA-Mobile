@@ -6,18 +6,20 @@ import android.util.Log;
 
 public final class RSACrypter {
 
+	private static final int UNICODE_MULTIPLIER = 255;
+	
 	/**
 	 * Шифрование строки
 	 * @param sourceData - исходная строка
 	 * @param key - ключ
 	 * @return - посимвольное кодированное представление в виде массива.
 	 */
-	public static int[] EnCrypt(String sourceData, RSAComplexKey key) {
-		int[] resultString = new int[sourceData.length()];
+	public static long[] EnCrypt(String sourceData, RSAComplexKey key) {
+		long[] resultString = new long[sourceData.length()];
 
 		for (int letterIndex = 0; letterIndex < sourceData.length(); letterIndex++) {
-			int currentLetter = sourceData.codePointAt(letterIndex);	
-			int resultLetterCode = divRest(currentLetter, key.getE(), key.getN());
+			long currentLetter = (sourceData.codePointAt(letterIndex)*UNICODE_MULTIPLIER + letterIndex);	
+			long resultLetterCode = divRest(currentLetter, key.getE(), key.getN());
 			resultString[letterIndex] = resultLetterCode;	
 		}
 
@@ -30,16 +32,14 @@ public final class RSACrypter {
 	 * @param key - ключ
 	 * @return -  расшифрованная строка
 	 */
-	public static String DeCrypt(int[] sourceData, RSAComplexKey key) {
+	public static String DeCrypt(long[] sourceData, RSAComplexKey key) {
 		StringBuilder resultString = new StringBuilder(sourceData.length);
 
 		for (int letterIndex = 0; letterIndex < sourceData.length; letterIndex++) {
-			int currentCode = sourceData[letterIndex];
-			int resultLetterCode = (int) divRest(currentCode, key.getD(),
-					key.getN());
-			Log.i("some", "letter:" + resultLetterCode);
-
-			resultString.append((char)resultLetterCode);
+			long currentCode = sourceData[letterIndex];
+			long resultLetterCode = divRest(currentCode, key.getD(),key.getN());
+			char resultCharCode = (char) ((resultLetterCode - letterIndex)/UNICODE_MULTIPLIER);
+			resultString.append(resultCharCode);
 		}
 
 		return resultString.toString();
@@ -47,41 +47,39 @@ public final class RSACrypter {
 
 	/**
 	 * Преобразование массива чисел в строку. 
-	 * Числа отображаются в шестнадцатеричном представлении с разделителем - пробелом.
 	 */
-	public static String convertLongArrayToString(int[] sourceData) {
+	public static String convertLongArrayToString(long[] sourceData) {
 
 		StringBuilder buf = new StringBuilder(200);
 		for (int index = 0; index < sourceData.length; index++) {
 			if (buf.length() > 0)
 				buf.append(' ');
-			buf.append(String.format("%04x", (int) sourceData[index]));
+			buf.append(Long.toString(sourceData[index]));
 		}
 
 		return buf.toString();
-
 	}
 
 	/**
 	 * Парсинг строки с числами в массив чисел.
 	 */
-	public static int[] convertStringToLongArray(String sourceData) {
+	public static long[] convertStringToLongArray(String sourceData) {
 
 		String[] sourceArray = sourceData.split(" ");
-		ArrayList<Integer> resultList = new ArrayList<>(sourceArray.length);
+		ArrayList<Long> resultList = new ArrayList<>(sourceArray.length);
 
 		try {
 			for (int index = 0; index < sourceArray.length; index++) {
 				String currentWord = sourceArray[index];
-				if (currentWord.length() > 0 && currentWord.charAt(0) != '|') {
-					resultList.add(Integer.parseInt(currentWord, 16));
+				if (currentWord.length() > 0 && currentWord.charAt(0) != ' ') {
+					resultList.add(Long.parseLong(currentWord));
 				}
 			}
 		} catch (NumberFormatException e) {
 			// do nothing
 		}
 
-		int[] correctResult = new int[resultList.size()];
+		long[] correctResult = new long[resultList.size()];
 		for (int index = 0; index < resultList.size(); index++) {
 			correctResult[index] = resultList.get(index);
 		}
@@ -91,7 +89,7 @@ public final class RSACrypter {
 	/**
 	 * Функция (a^k)mod(n) ускоренного типа
 	 */
-	private static int divRest(long a, long k, long n)
+	private static long divRest(long a, long k, long n)
 	{
 		long b = 1;
 
@@ -104,6 +102,6 @@ public final class RSACrypter {
 				b = (b * a) % n;
 			}
 		}
-		return (int)b;
+		return b;
 	}
 }

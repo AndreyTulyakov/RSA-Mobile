@@ -57,13 +57,13 @@ public class OperationsFragment extends Fragment {
 				if(key != null) {
 				
 					if(radioButtonEncrypt.isChecked()) { // If selected EnCrypt
-						int[] encryptedData = RSACrypter.EnCrypt(editSource.getText().toString(), key);
+						long[] encryptedData = RSACrypter.EnCrypt(editSource.getText().toString(), key);
 						editResult.setText(RSACrypter.convertLongArrayToString(encryptedData));
 
 						Toast.makeText(rootView.getContext(), getString(R.string.Encrypted), Toast.LENGTH_SHORT).show(); 
 						
 					} else { // If selected DeCrypt
-						int[] sourceData = RSACrypter.convertStringToLongArray(editResult.getText().toString());
+						long[] sourceData = RSACrypter.convertStringToLongArray(editResult.getText().toString());
 						String decryptedData = RSACrypter.DeCrypt(sourceData, key);
 						editSource.setText(decryptedData);
 						Toast.makeText(rootView.getContext(), getString(R.string.Decrypted), Toast.LENGTH_SHORT).show();					

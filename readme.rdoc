@@ -1,11 +1,7 @@
 ==RSA Mobile
 
-Программа для простого шифрования текстовых данных и
-генерации ключей.
+Copyright (C) 2015 Andrey Tulyakov
+@mail: mhyhre@gmail.com
 
-В рамках лабораторной работы #1 по дисциплине "Информационная безопасность".
-
-==== Авторы:
-- Андрей Т.
-- Анна Д.
-- Евгений В.
+Simple text encrypt/decrypt application with key generation.
+RSA-like algorithm.
